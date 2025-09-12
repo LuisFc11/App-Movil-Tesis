@@ -1,0 +1,9 @@
+# Ignorar archivo .env en Backend-SM
+Backend/.env
+
+Backend/node_modules/
+Frontend/node_modules/
+
+# Ignorar configuraciones de editores (opcional, si las tienes)
+.vscode/
+.idea/
