@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: '*' })); // Asegúrate de que esto esté presente
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,18 +31,18 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema, 'productos');
 
-// Middleware para loggear solicitudes (para depurar)
+// Middleware para loggear solicitudes
 app.use((req, res, next) => {
-  console.log(`📥 Solicitud recibida: ${req.method} ${req.url} desde ${req.ip}`);
+  console.log(`📥 Solicitud recibida: ${req.method} ${req.url} desde ${req.ip} - ${new Date().toISOString()}`);
   next();
 });
 
-// Ruta GET para la raíz (prueba simple)
+// Ruta GET
 app.get('/', (req, res) => {
   res.json({ message: 'API de Qhatu Marca - Backend activo' });
 });
 
-// Ruta para agregar producto (POST /products)
+// Ruta POST
 app.post('/products', async (req, res) => {
   try {
     const { codeqr, nombre, descripcion, precio } = req.body;
@@ -59,7 +59,7 @@ app.post('/products', async (req, res) => {
   }
 });
 
-// Iniciar servidor escuchando en todas las interfaces
+// Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT} (accesible desde cualquier IP)`);
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

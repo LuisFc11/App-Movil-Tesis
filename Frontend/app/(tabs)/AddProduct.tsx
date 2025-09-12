@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import { Product } from '@/types';  // Asegúrate de que 'types.ts' esté disponible
+import { Product } from '@/types'; // Asegúrate de que 'types.ts' esté disponible
 
-// Cambia esto según tu entorno: emulador o dispositivo físico
-const BASE_URL = 'http://192.168.182.130:3000';  // 
+// Usa la URL de Render en lugar de la IP local
+const BASE_URL = 'https://app-movil-tesis.onrender.com'; // Reemplaza con tu URL exacta de Render
 
 const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
@@ -60,7 +60,7 @@ const AddProduct: React.FC = () => {
       console.log('Intentando conectar a:', `${BASE_URL}/products`);
       console.log('Enviando datos:', JSON.stringify(product, null, 2));
       const response = await axios.post(`${BASE_URL}/products`, product, {
-        timeout: 120000,  // Aumentado a 120s para evitar timeouts en pruebas
+        timeout: 120000, // Aumentado a 120s para evitar timeouts en pruebas
         headers: { 'Content-Type': 'application/json' },
       });
       console.log('Respuesta del servidor:', response.data);
@@ -78,8 +78,12 @@ const AddProduct: React.FC = () => {
         errorMessage = `Error del servidor: ${err.response.status} - ${err.response.data?.message || err.response.statusText}`;
       } else if (err.request) {
         errorMessage = 'No se pudo conectar al servidor. Verifica que el backend esté corriendo y la URL sea correcta.';
-        console.error('Error de solicitud:', err.request);
-        Alert.alert('Error de Conexión', 'Asegúrate de que el backend esté corriendo y accesible.');
+        console.error('Detalles de la solicitud:', {
+          url: err.config.url,
+          method: err.config.method,
+          data: err.config.data,
+          status: err.request.status,
+        });
       } else {
         errorMessage = err.message || 'Error al procesar la solicitud.';
       }
