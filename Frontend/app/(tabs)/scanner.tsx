@@ -20,14 +20,14 @@ import { useIsFocused } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
 const isSmallScreen = width < 360;
 
-const BASE_URL = 'http://10.0.2.2:3000';  // Para emulador Android; cambia a 'http://localhost:3000' para iOS o tu IP para dispositivo físico
+const BASE_URL = 'https://ff61d1474f7e.ngrok-free.app'; // URL de ngrok, actualiza si cambia
 
 export default function Scanner() {
   const isFocused = useIsFocused();
   const [permission, requestPermission] = useCameraPermissions();
   const [facing] = useState<CameraType>('back');
   const [flashEnabled, setFlashEnabled] = useState(false);
-  const [scannedProduct, setScannedProduct] = useState<any | null>(null);  // Cambiado a 'any' para flexibilidad
+  const [scannedProduct, setScannedProduct] = useState<any | null>(null);
   const [showProductModal, setShowProductModal] = useState(false);
   const [scanning, setScanning] = useState(true);
 
@@ -36,20 +36,9 @@ export default function Scanner() {
     if (isFocused) {
       setScanning(true);
     }
-    // Verificación inicial de conexión al backend MongoDB
-    const checkBackendConnection = async () => {
-      try {
-        console.log('Iniciando verificación de conexión al backend');
-        const response = await axios.get(`${BASE_URL}/products`);
-        console.log('Conexión exitosa. Productos encontrados:', response.data);
-        Alert.alert('Conexión exitosa', `Se conectó al backend. Hay ${response.data.length} productos en la BD.`);
-      } catch (error) {
-        console.error('Error al conectar al backend:', error);
-        Alert.alert('Error de conexión', 'No se pudo conectar al backend. Verifica si está corriendo o tu conexión a internet.');
-      }
-    };
-    checkBackendConnection();
   }, [isFocused]);
+
+
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -76,33 +65,31 @@ export default function Scanner() {
   }
 
   const handleBarCodeScanned = async ({ data }: { data: string }) => {
-    console.log('Código escaneado:', data);
+    console.log('Código de barras escaneado:', data);
     if (!scanning) return;
 
     setScanning(false);
     try {
-      console.log('Iniciando consulta al backend con data:', data);
+      console.log('Consultando producto con codeqr:', data);
       const response = await axios.get(`${BASE_URL}/products/codeqr/${data}`);
-      console.log('Resultados de la consulta:', response.data);
+      console.log('Respuesta del backend:', response.data);
       if (response.data) {
-        const productData = response.data as any;  // Usamos 'any' ya que no hay interfaz
-        console.log('Producto encontrado:', productData);
-        setScannedProduct(productData);
+        setScannedProduct(response.data);
         setShowProductModal(true);
       } else {
-        console.log('Consulta vacía, listando todos los documentos...');
-        const allDocs = await axios.get(`${BASE_URL}/products`);
-        console.log('Todos los documentos en productos:', allDocs.data);
         Alert.alert(
           'Producto no encontrado',
-          `No se encontró información para el código: ${data}`,
+          `No se encontró un producto con el codeqr: ${data}`,
           [{ text: 'OK', onPress: () => setScanning(true) }]
         );
       }
     } catch (error) {
-      console.error('Error fetching product:', error);
-      Alert.alert('Error', 'Ocurrió un error al consultar el producto');
-      setScanning(true);
+      console.error('Error al consultar el producto:', error);
+      Alert.alert(
+        'Error',
+        'Ocurrió un error al buscar el producto. Verifica el código escaneado o la conexión.',
+        [{ text: 'OK', onPress: () => setScanning(true) }]
+      );
     }
   };
 

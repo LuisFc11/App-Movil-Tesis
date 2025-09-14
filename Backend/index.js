@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: '*' })); // Asegúrate de que esto esté presente
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,18 +31,18 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema, 'productos');
 
-// Middleware para loggear solicitudes
+// Middleware para loggear solicitudes (para depurar)
 app.use((req, res, next) => {
-  console.log(`📥 Solicitud recibida: ${req.method} ${req.url} desde ${req.ip} - ${new Date().toISOString()}`);
+  console.log(`📥 Solicitud recibida: ${req.method} ${req.url} desde ${req.ip}`);
   next();
 });
 
-// Ruta GET
+// Ruta GET para la raíz (prueba simple)
 app.get('/', (req, res) => {
   res.json({ message: 'API de Qhatu Marca - Backend activo' });
 });
 
-// Ruta POST
+// Ruta para agregar producto (POST /products)
 app.post('/products', async (req, res) => {
   try {
     const { codeqr, nombre, descripcion, precio } = req.body;
@@ -59,7 +59,36 @@ app.post('/products', async (req, res) => {
   }
 });
 
-// Iniciar servidor
+// Ruta GET para buscar producto por codeqr
+app.get('/products/codeqr/:codeqr', async (req, res) => {
+  try {
+    const { codeqr } = req.params;
+    console.log(`📥 Solicitud recibida en /products/codeqr/${codeqr} desde ${req.ip}`);
+    const product = await Product.findOne({ codeqr });
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: 'Producto no encontrado' });
+    }
+  } catch (err) {
+    console.error('❌ Error al buscar producto:', err);
+    res.status(500).json({ message: '❌ Error al buscar el producto', error: err.message });
+  }
+});
+
+// Ruta GET para listar todos los productos
+app.get('/products', async (req, res) => {
+  try {
+    console.log(`📥 Solicitud recibida en /products desde ${req.ip}`);
+    const products = await Product.find({});
+    res.json(products);
+  } catch (err) {
+    console.error('❌ Error al listar productos:', err);
+    res.status(500).json({ message: '❌ Error al listar los productos', error: err.message });
+  }
+});
+
+// Iniciar servidor escuchando en todas las interfaces
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT} (accesible desde cualquier IP)`);
 });

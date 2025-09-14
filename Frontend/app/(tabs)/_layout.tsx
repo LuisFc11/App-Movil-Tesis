@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { MessageCircle, Scan, Package } from 'lucide-react-native';
+import { MessageCircle, Scan, Package, Plus } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Dimensions, Platform } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar'; // Para configurar la barra de navegación en Android
@@ -14,7 +14,7 @@ export default function TabLayout() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       NavigationBar.setBackgroundColorAsync('#ffffff00'); // Hace la barra de navegación transparente en Android
-      NavigationBar.setPositionAsync('absolute'); // Posiciona la barra de forma absoluta para que el contenido se extienda detrás
+      NavigationBar.setPositionAsync('absolute'); // Posiciona la barra de forma absoluta
     }
   }, []);
 
@@ -22,15 +22,15 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#DC2626',
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarActiveTintColor: '#DC2626', // Rojo para el ícono activo
+        tabBarInactiveTintColor: '#9CA3AF', // Gris para inactivo
         tabBarStyle: {
-          backgroundColor: '#ffffffff',
+          backgroundColor: '#FFFFFF', // Fondo blanco para la barra
           borderTopWidth: 1, // Borde fino y elegante arriba
-          borderTopColor: '#FCD34D',
+          borderTopColor: '#FCD34D', // Amarillo para combinar
           paddingTop: 8, // Espacio superior interno más compacto
-          paddingBottom: Math.max(insets.bottom, 20) + (isSmallScreen ? 8 : 12), // Ajuste mejorado: mínimo 20px + insets para más espacio
-          minHeight: isSmallScreen ? 70 : 90, // Altura mínima flexible para adaptarse el boton de navegacion abajo el 90 cambia 
+          paddingBottom: Math.max(insets.bottom, 20) + (isSmallScreen ? 8 : 12), // Ajuste mejorado
+          minHeight: isSmallScreen ? 70 : 90, // Altura mínima flexible
         },
         tabBarLabelStyle: {
           fontSize: isSmallScreen ? 11 : 13,
@@ -41,9 +41,9 @@ export default function TabLayout() {
           marginBottom: isSmallScreen ? 0 : 2, // Ajuste para pantallas pequeñas
         },
       }}
-      safeAreaInsets={{ // Aplica insets explícitamente para evitar superposiciones
+      safeAreaInsets={{
         top: 0,
-        bottom: Platform.OS === 'android' ? Math.max(insets.bottom, 20) : insets.bottom, // Más espacio en Android para tu caso
+        bottom: Platform.OS === 'android' ? Math.max(insets.bottom, 20) : insets.bottom,
         left: 0,
         right: 0,
       }}>
@@ -71,6 +71,15 @@ export default function TabLayout() {
           title: 'Productos',
           tabBarIcon: ({ size, color }) => (
             <Package size={isSmallScreen ? size * 0.85 : size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="addProduct"
+        options={{
+          title: 'Subir Producto',
+          tabBarIcon: ({ size, color }) => (
+            <Plus size={isSmallScreen ? size * 0.85 : size} color={color} />
           ),
         }}
       />

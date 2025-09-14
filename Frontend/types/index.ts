@@ -5,6 +5,7 @@ export interface Product {
   precio: number;       // Precio
   id?: string;          // ID opcional (puede venir del backend)
   createdAt?: Date;     // Fecha de creación opcional
+  imageUrl?: string; // Campo opcional para URL de imagen
 }
 
 export interface ChatMessage {

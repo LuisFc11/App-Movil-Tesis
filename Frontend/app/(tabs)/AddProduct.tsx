@@ -4,8 +4,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import { Product } from '@/types'; // Asegúrate de que 'types.ts' esté disponible
 
-// Usa la URL de Render en lugar de la IP local
-const BASE_URL = 'https://app-movil-tesis.onrender.com'; // Reemplaza con tu URL exacta de Render
+const BASE_URL = 'https://ff61d1474f7e.ngrok-free.app'; // URL de ngrok, actualiza si cambia
 
 const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
@@ -57,10 +56,9 @@ const AddProduct: React.FC = () => {
     }
 
     try {
-      console.log('Intentando conectar a:', `${BASE_URL}/products`);
-      console.log('Enviando datos:', JSON.stringify(product, null, 2));
+      console.log('Enviando datos al backend:', JSON.stringify(product, null, 2));
       const response = await axios.post(`${BASE_URL}/products`, product, {
-        timeout: 120000, // Aumentado a 120s para evitar timeouts en pruebas
+        timeout: 30000,
         headers: { 'Content-Type': 'application/json' },
       });
       console.log('Respuesta del servidor:', response.data);
@@ -77,13 +75,7 @@ const AddProduct: React.FC = () => {
       if (err.response) {
         errorMessage = `Error del servidor: ${err.response.status} - ${err.response.data?.message || err.response.statusText}`;
       } else if (err.request) {
-        errorMessage = 'No se pudo conectar al servidor. Verifica que el backend esté corriendo y la URL sea correcta.';
-        console.error('Detalles de la solicitud:', {
-          url: err.config.url,
-          method: err.config.method,
-          data: err.config.data,
-          status: err.request.status,
-        });
+        errorMessage = 'No se pudo conectar al servidor. Verifica la URL o la conexión.';
       } else {
         errorMessage = err.message || 'Error al procesar la solicitud.';
       }
@@ -180,7 +172,7 @@ const AddProduct: React.FC = () => {
       <Toast />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -268,7 +260,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: '#F59E0B', // Amarillo para el botón
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 24,
