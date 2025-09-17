@@ -1,0 +1,10 @@
+//codigo para arrancar el servidor (Backend)
+node index.js
+
+//codigo para iniciar el Fronfend
+npx expo start --tunnel
+//para reiniciar el codigo de frontend
+npx expo start --clear --tunnel
+
+//codigo para ejecutar el ngrok
+ngrok http 3000

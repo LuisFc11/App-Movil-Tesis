@@ -20,7 +20,7 @@ import { useIsFocused } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
 const isSmallScreen = width < 360;
 
-const BASE_URL = 'https://ff61d1474f7e.ngrok-free.app'; // URL de ngrok, actualiza si cambia
+const BASE_URL = 'https://9b3de9a9ebf8.ngrok-free.app'; // URL de ngrok, actualiza si cambia
 
 export default function Scanner() {
   const isFocused = useIsFocused();

@@ -4,7 +4,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import { Product } from '@/types'; // Asegúrate de que 'types.ts' esté disponible
 
-const BASE_URL = 'https://ff61d1474f7e.ngrok-free.app'; // URL de ngrok, actualiza si cambia
+const BASE_URL = 'https://9b3de9a9ebf8.ngrok-free.app'; // URL de ngrok, actualiza si cambia
 
 const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
