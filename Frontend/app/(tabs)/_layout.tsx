@@ -74,15 +74,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="addProduct"
-        options={{
-          title: 'Subir Producto',
-          tabBarIcon: ({ size, color }) => (
-            <Plus size={isSmallScreen ? size * 0.85 : size} color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }

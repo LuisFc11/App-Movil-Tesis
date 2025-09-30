@@ -8,26 +8,40 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
-  Platform
+  Platform,
+  Image,
 } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { X, Flashlight } from 'lucide-react-native';
 import ScannerOverlay from '@/components/ScannerOverlay';
-import ProductCard from '@/components/ProductCard';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 const isSmallScreen = width < 360;
 
-const BASE_URL = 'https://9b3de9a9ebf8.ngrok-free.app'; // URL de ngrok, actualiza si cambia
+const BASE_URL = 'https://749aa1a9fae3.ngrok-free.app'; // URL de ngrok, actualiza si cambia
+
+// Interfaz para el producto (ajustada según tus datos)
+interface Product {
+  id: string;
+  codeqr: string;
+  nombre: string;
+  precio: number;
+  stock: number;
+  category: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  descripcion?: string;
+}
 
 export default function Scanner() {
   const isFocused = useIsFocused();
   const [permission, requestPermission] = useCameraPermissions();
   const [facing] = useState<CameraType>('back');
   const [flashEnabled, setFlashEnabled] = useState(false);
-  const [scannedProduct, setScannedProduct] = useState<any | null>(null);
+  const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
   const [showProductModal, setShowProductModal] = useState(false);
   const [scanning, setScanning] = useState(true);
 
@@ -37,8 +51,6 @@ export default function Scanner() {
       setScanning(true);
     }
   }, [isFocused]);
-
-
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -101,6 +113,30 @@ export default function Scanner() {
     setShowProductModal(false);
     setScannedProduct(null);
     setScanning(true);
+  };
+
+  // Componente ProductCard integrado directamente
+  const ProductCard = ({ product }: { product: Product }) => {
+    const description = product.descripcion || 'No hay descripción disponible para este producto.';
+    return (
+      <View style={styles.card}>
+        {product.imageUrl ? (
+          <Image
+            source={{ uri: product.imageUrl }}
+            style={styles.productImage}
+            resizeMode="contain"
+            onError={(e) => console.log('Error cargando imagen:', e.nativeEvent.error)}
+          />
+        ) : (
+          <View style={styles.placeholderContainer}>
+            <Text>No hay imagen disponible</Text>
+          </View>
+        )}
+        <Text style={styles.productName}>{product.nombre}</Text>
+        <Text style={styles.productPrice}>Precio: ${product.precio.toFixed(2)}</Text>
+        <Text style={styles.productDescription}>{description}</Text>
+      </View>
+    );
   };
 
   return (
@@ -306,5 +342,54 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Inter-Bold',
     textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: 'center',
+  },
+  productImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  placeholderContainer: {
+    width: 200,
+    height: 200,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  productName: {
+    fontSize: 24,
+    fontFamily: 'Inter-Bold',
+    color: '#DC2626',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  productPrice: {
+    fontSize: 20,
+    fontFamily: 'Inter-Bold',
+    color: '#16A34A',
+    marginBottom: 12,
+  },
+  productDescription: {
+    fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 24,
   },
 });
