@@ -20,7 +20,7 @@ import { useIsFocused } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
 const isSmallScreen = width < 360;
 
-const BASE_URL = 'https://749aa1a9fae3.ngrok-free.app'; // URL de ngrok, actualiza si cambia
+const BASE_URL = 'https://63affdf4629d.ngrok-free.app'; // URL de ngrok, actualiza si cambia
 
 // Interfaz para el producto (ajustada según tus datos)
 interface Product {

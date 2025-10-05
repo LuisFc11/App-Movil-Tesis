@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 // BLOCK: Constantes globales
 const { width } = Dimensions.get('window');
-const BASE_URL = 'https://749aa1a9fae3.ngrok-free.app';
+const BASE_URL = 'https://63affdf4629d.ngrok-free.app';
 
 // BLOCK: Componente principal
 export default function Products() {
