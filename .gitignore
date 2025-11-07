@@ -3,6 +3,7 @@ Backend/.env
 
 Backend/node_modules/
 Frontend/node_modules/
+Frontend/.env
 
 # Ignorar configuraciones de editores (opcional, si las tienes)
 .vscode/
